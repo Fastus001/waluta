@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.math.BigDecimal;
 
 @NoArgsConstructor
 @Data
@@ -21,13 +20,13 @@ public class Rate {
 
     private String currency;
     private String code;
-    private BigDecimal mid;
+    private Double mid;
 
     @ManyToOne
     private Currencies currencies;
 
     @Builder
-    public Rate(String currency, String code, BigDecimal mid) {
+    public Rate(String currency, String code, Double mid) {
         this.currency = currency;
         this.code = code;
         this.mid = mid;
