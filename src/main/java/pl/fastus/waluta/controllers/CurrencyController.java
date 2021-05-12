@@ -2,12 +2,14 @@ package pl.fastus.waluta.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.RateToRateResponseMapper;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.AvailableRate;
+import pl.fastus.waluta.model.DTO.Exchange;
 import pl.fastus.waluta.model.DTO.RateResponse;
 import pl.fastus.waluta.model.DTO.TableRequest;
 import pl.fastus.waluta.model.Rate;
@@ -42,6 +44,13 @@ public class CurrencyController {
     public List<RateResponse> getCurrentRates(){
         return getStreamRate().map(rateToRateResponseMapper::mapToRateResponse)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{code}")
+    public Exchange getExchangeRate(@PathVariable String code){
+        return nbpApiWebService
+                .getTodayExchangeRateFor(code)
+                .block();
     }
 
     private Stream<Rate> getStreamRate(){
