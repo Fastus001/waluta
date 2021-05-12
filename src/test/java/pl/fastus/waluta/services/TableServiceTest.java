@@ -49,5 +49,4 @@ class TableServiceTest {
         assertNotNull(savedTable);
         assertEquals(2, savedTable.getRates().size());
     }
-
 }
