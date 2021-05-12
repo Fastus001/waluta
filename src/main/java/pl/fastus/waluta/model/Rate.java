@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -21,6 +22,9 @@ public class Rate {
     private String currency;
     private String code;
     private BigDecimal mid;
+
+    @ManyToOne
+    private Currencies currencies;
 
     @Builder
     public Rate(String currency, String code, BigDecimal mid) {

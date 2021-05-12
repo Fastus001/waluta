@@ -6,23 +6,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import pl.fastus.waluta.model.DTO.TableDTO;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 public class NbpApiWebService {
     private final String apiTableA;
 
-    public NbpApiWebService(@Value("$api.tableA") String apiTableA) {
+    public NbpApiWebService(@Value("${api.tableA}") String apiTableA) {
         this.apiTableA = apiTableA;
     }
 
-    public Mono<TableDTO> getTodayTableACourses(){
+    public Flux<TableDTO> getTodayTableACourses(){
         return WebClient
                 .create(apiTableA)
                 .get()
                 .uri(UriBuilder::build)
                 .accept( MediaType.APPLICATION_JSON )
-                .exchangeToMono( response->response.bodyToMono( TableDTO.class ) );
+                .exchangeToFlux(response->response.bodyToFlux(TableDTO.class));
     }
 
 

@@ -8,45 +8,45 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.fastus.waluta.model.Rate;
-import pl.fastus.waluta.model.Table;
+import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.repositories.TableRepository;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class TableServiceTest {
+class CurrenciesServiceTest {
 
     @Mock
     TableRepository repository;
 
     @InjectMocks
-    TableService service;
+    CurrenciesService service;
 
-    Table table;
+    Currencies currencies;
 
     @BeforeEach
     void setService(){
-        table = new Table();
-        table.setId(1L);
-        table.setTable("A");
-        table.setNo("090/A/NBP/2021");
-        table.setRates(List.of(
-                new Rate("bat (Tajlandia)", "THB", BigDecimal.valueOf(0.1201)),
+        currencies = new Currencies();
+        currencies.setId(1L);
+        currencies.setTableName("A");
+        currencies.setNo("090/A/NBP/2021");
+        currencies.setRates(Set.of(
+                Rate.builder().currency("bat (Tajlandia)").code("THB").mid(BigDecimal.valueOf(0.1201)).build(),
                 new Rate("dolar amerykański", "USD", BigDecimal.valueOf(3.7456))
         ));
     }
 
     @Test
     void testSave(){
-        BDDMockito.given(repository.save(any())).willReturn(table);
+        BDDMockito.given(repository.save(any())).willReturn(currencies);
 
-        Table savedTable = service.saveTable(this.table);
+        Currencies savedCurrencies = service.saveTable(this.currencies);
 
-        assertNotNull(savedTable);
-        assertEquals(2, savedTable.getRates().size());
+        assertNotNull(savedCurrencies);
+        assertEquals(2, savedCurrencies.getRates().size());
     }
 }
