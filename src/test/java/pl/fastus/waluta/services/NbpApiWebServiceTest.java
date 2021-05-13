@@ -64,4 +64,20 @@ class NbpApiWebServiceTest {
         assertEquals( "A", response.getTable());
         assertEquals( "090/A/NBP/2021", response.getNo());
     }
+
+//    @Test
+//    void getTodayExchangeRateFor() throws JsonProcessingException {
+//        Exchange exchange = new Exchange("A", "dolar amerykański","USD",
+//                List.of(new ExchangeRate("090/A/NBP/2021","2021-05-12",3.7456)));
+//
+//        mockWebServer.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(exchange)));
+//
+//        final Exchange returnedExchange = service.getTodayExchangeRateFor("USD").block();
+//        final ExchangeRate exchangeRate = returnedExchange.getRates().get(0);
+//        assertNotNull(exchangeRate);
+//        assertEquals( 1, returnedExchange.getRates().size() );
+//        assertEquals( 3.7456, exchangeRate.getMid());
+//        assertEquals( "090/A/NBP/2021", exchangeRate.getNo());
+//
+//    }
 }

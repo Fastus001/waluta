@@ -48,7 +48,6 @@ public class CurrencyController {
     @GetMapping(value = "/exchange", consumes="application/json", produces = "application/json")
     public ExchangeResponse exchange(@RequestBody ExchangeRequest request){
         return currenciesService.exchangeCurrencies(request, getTableRequest());
-    }
 
     private Stream<Rate> getStreamRate(){
         TableRequest tableRequest = getTableRequest();
