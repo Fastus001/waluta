@@ -14,6 +14,7 @@ import pl.fastus.waluta.model.Rate;
 import pl.fastus.waluta.services.CurrenciesService;
 import pl.fastus.waluta.services.NbpApiWebService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,8 +47,9 @@ public class CurrencyController {
     }
 
     @GetMapping(value = "/exchange", consumes="application/json", produces = "application/json")
-    public ExchangeResponse exchange(@RequestBody ExchangeRequest request){
+    public ExchangeResponse exchange(@Valid @RequestBody ExchangeRequest request) {
         return currenciesService.exchangeCurrencies(request, getTableRequest());
+    }
 
     private Stream<Rate> getStreamRate(){
         TableRequest tableRequest = getTableRequest();
