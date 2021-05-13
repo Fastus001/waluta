@@ -13,6 +13,7 @@ import pl.fastus.waluta.model.DTO.TableRequest;
 import pl.fastus.waluta.model.Rate;
 import pl.fastus.waluta.repositories.TableRepository;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,8 +47,8 @@ class CurrenciesServiceTest {
         currencies.setTableName("A");
         currencies.setNumber("090/A/NBP/2021");
         currencies.setRates(Set.of(
-                Rate.builder().currency("bat (Tajlandia)").code("THB").mid(0.1201).build(),
-                new Rate("dolar amerykański", "USD", 3.7456)
+                Rate.builder().currency("bat (Tajlandia)").code("THB").mid(BigDecimal.valueOf(0.1201)).build(),
+                new Rate("dolar amerykański", "USD", BigDecimal.valueOf(3.7456))
         ));
 
         BDDMockito.given(mapper.tableRequestToCurrencies(request)).willReturn(currencies);

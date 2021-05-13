@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pl.fastus.waluta.mappers.RateToRateResponseMapper;
+import pl.fastus.waluta.mappers.RateMapper;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.TableRequest;
 import pl.fastus.waluta.model.Rate;
@@ -17,6 +17,7 @@ import pl.fastus.waluta.services.CurrenciesService;
 import pl.fastus.waluta.services.NbpApiWebService;
 import reactor.core.publisher.Flux;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
@@ -35,7 +36,7 @@ class CurrencyControllerTest {
     CurrenciesService currenciesService;
 
     @Mock
-    RateToRateResponseMapper rateToRateResponseMapper;
+    RateMapper rateMapper;
 
     @InjectMocks
     CurrencyController controller;
@@ -53,8 +54,8 @@ class CurrencyControllerTest {
     void getAvailableCurrencies() throws Exception {
         Currencies currencies = new Currencies();
         currencies.setRates(Set.of(
-                Rate.builder().currency("bat (Tajlandia)").code("THB").mid(0.1201).build(),
-                Rate.builder().currency("dolar amerykański").code("USD").mid(3.7456).build()
+                Rate.builder().currency("bat (Tajlandia)").code("THB").mid(BigDecimal.valueOf(0.1201)).build(),
+                Rate.builder().currency("dolar amerykański").code("USD").mid(BigDecimal.valueOf(3.7456)).build()
         ));
 
         BDDMockito.given(nbpApiWebService.getTodayTableACourses()).willReturn(Flux.just(new TableRequest()));
