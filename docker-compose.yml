@@ -1,0 +1,21 @@
+version: "3"
+services:
+  spring-exchange:
+    image: spring-exchange
+    ports:
+      - "8080:8080"
+    networks:
+      - exchange
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:8
+    networks:
+      - exchange
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db_currency
+
+networks:
+  exchange:
