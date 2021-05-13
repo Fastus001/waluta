@@ -23,10 +23,10 @@ public class NbpApiWebService {
     }
 
     public Flux<TableRequest> getTodayTableACourses(){
+
         return WebClient
                 .create(apiTableA)
                 .get()
-                .uri(UriBuilder::build)
                 .accept( MediaType.APPLICATION_JSON )
                 .exchangeToFlux(response-> {
                     if(response.statusCode().equals(HttpStatus.NOT_FOUND)){
@@ -44,4 +44,5 @@ public class NbpApiWebService {
                 .accept( MediaType.APPLICATION_JSON )
                 .exchangeToFlux(response->response.bodyToFlux(TableRequest.class));
     }
+
 }
