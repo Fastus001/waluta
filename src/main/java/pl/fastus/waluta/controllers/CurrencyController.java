@@ -1,6 +1,7 @@
 package pl.fastus.waluta.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +11,7 @@ import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.RateMapper;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.*;
+import pl.fastus.waluta.model.Exchange;
 import pl.fastus.waluta.model.Rate;
 import pl.fastus.waluta.services.CurrenciesService;
 import pl.fastus.waluta.services.NbpApiWebService;
@@ -46,8 +48,9 @@ public class CurrencyController {
                 .collect(Collectors.toList());
     }
 
+    @SneakyThrows
     @GetMapping(value = "/exchange", consumes="application/json", produces = "application/json")
-    public ExchangeResponse exchange(@Valid @RequestBody ExchangeRequest request) {
+    public Exchange exchange(@Valid @RequestBody ExchangeRequest request) {
         return currenciesService.exchangeCurrencies(request, getTableRequest());
     }
 

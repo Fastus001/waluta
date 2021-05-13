@@ -11,7 +11,7 @@ import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.RateRequest;
 import pl.fastus.waluta.model.DTO.TableRequest;
 import pl.fastus.waluta.model.Rate;
-import pl.fastus.waluta.repositories.TableRepository;
+import pl.fastus.waluta.repositories.CurrenciesRepository;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 class CurrenciesServiceTest {
 
     @Mock
-    TableRepository repository;
+    CurrenciesRepository repository;
 
     @Mock
     TableRequestMapper mapper;

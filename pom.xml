@@ -20,6 +20,9 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <flyway.user>databaseUser</flyway.user>
+        <flyway.password>databasePassword</flyway.password>
+        <flyway.schemas>schemaName</flyway.schemas>
     </properties>
     <dependencies>
         <dependency>
@@ -81,7 +84,12 @@
             <version>4.0.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
@@ -118,6 +126,22 @@
                         </annotationProcessorPaths>
                     </configuration>
                 </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>7.8.2</version>
+                <configuration>
+                    <url>jdbc:h2:mem:testdb:./target/db</url>
+                    <user>sa</user>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.4.197</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 
