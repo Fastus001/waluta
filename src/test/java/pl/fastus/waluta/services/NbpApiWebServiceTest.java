@@ -34,7 +34,7 @@ class NbpApiWebServiceTest {
     @BeforeEach
     void setUp() {
         String baseUrl = String.format( "http://localhost:%s", mockWebServer.getPort() );
-        service = new NbpApiWebService(baseUrl);
+        service = new NbpApiWebService(baseUrl, baseUrl);
         objectMapper = new ObjectMapper();
     }
 
