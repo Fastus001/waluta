@@ -2,6 +2,8 @@ package pl.fastus.waluta.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@NoArgsConstructor
+@ToString(exclude = "rates")
 @EqualsAndHashCode(exclude = "rates")
 @Data
 @Entity

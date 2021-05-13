@@ -10,5 +10,5 @@ import pl.fastus.waluta.model.Rate;
 @Mapper(componentModel = "spring")
 public interface RateToAvailableRate {
 
-    AvailableRate mapToAvailableRateResponse(Rate rate);
+    AvailableRate mapToAvailableRate(Rate rate);
 }

@@ -5,19 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.fastus.waluta.exceptions.NoSuchCurrencyException;
 import pl.fastus.waluta.mappers.ExchangeMapper;
+import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.TableRequestMapper;
 import pl.fastus.waluta.model.Currencies;
-import pl.fastus.waluta.model.DTO.ExchangeRequest;
-import pl.fastus.waluta.model.DTO.ExchangeResponse;
-import pl.fastus.waluta.model.DTO.RateRequest;
-import pl.fastus.waluta.model.DTO.TableRequest;
+import pl.fastus.waluta.model.DTO.*;
 import pl.fastus.waluta.model.Exchange;
 import pl.fastus.waluta.repositories.CurrenciesRepository;
 import pl.fastus.waluta.repositories.ExchangeRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,11 +28,23 @@ public class CurrenciesService {
     private final ExchangeRepository exchangeRepository;
     private final TableRequestMapper tableRequestMapper;
     private final ExchangeMapper exchangeMapper;
+    private final RateToAvailableRate toAvailableRateMapper;
 
     public Currencies saveTable(TableRequest toSave){
         final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
         return currenciesRepository.save(currencies);
     }
+
+    public List<AvailableRate> getAvailableRates(TableRequest toSave){
+        final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
+        Currencies save = currenciesRepository.save(currencies);
+        return save.getRates()
+                .stream()
+                .map(toAvailableRateMapper::mapToAvailableRate)
+                .collect(Collectors.toList());
+    }
+
+
 
     public Exchange exchangeCurrencies(ExchangeRequest request, TableRequest tableRequest) {
         Set<RateRequest> rates = tableRequest.getRates();

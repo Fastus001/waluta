@@ -10,11 +10,14 @@ import org.springframework.web.util.UriBuilder;
 import pl.fastus.waluta.model.DTO.TableRequest;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 public class NbpApiWebService {
     private final String apiTableA;
     private final String tableALastDay;
+    private TableRequest currentDayTable;
 
     public NbpApiWebService(@Value("${api.tableA}") String apiTableA,
                             @Value("${api.tableALastDay}") String tableALastDay) {
@@ -22,9 +25,11 @@ public class NbpApiWebService {
         this.tableALastDay = tableALastDay;
     }
 
-    public Flux<TableRequest> getTodayTableACourses(){
-
-        return WebClient
+    public TableRequest getTodayTableACourses(){
+        if(currentDayTable!=null && LocalDate.now().toString().equals(currentDayTable.getEffectiveDate())){
+            return currentDayTable;
+        }
+        currentDayTable = WebClient
                 .create(apiTableA)
                 .get()
                 .accept( MediaType.APPLICATION_JSON )
@@ -33,16 +38,18 @@ public class NbpApiWebService {
                         return Flux.empty();
                     }
                     return response.bodyToFlux(TableRequest.class);
-                });
+                }).blockFirst();
+        return currentDayTable;
     }
 
-    public Flux<TableRequest> getPreviousDayTableACourses(){
+    public TableRequest getPreviousDayTableACourses(){
         return WebClient
                 .create(tableALastDay)
                 .get()
                 .uri(UriBuilder::build)
                 .accept( MediaType.APPLICATION_JSON )
-                .exchangeToFlux(response->response.bodyToFlux(TableRequest.class));
+                .exchangeToFlux(response->response.bodyToFlux(TableRequest.class))
+                .blockFirst();
     }
 
 }
