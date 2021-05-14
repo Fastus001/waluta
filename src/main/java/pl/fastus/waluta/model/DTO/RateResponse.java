@@ -1,5 +1,6 @@
 package pl.fastus.waluta.model.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**

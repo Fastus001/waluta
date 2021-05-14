@@ -1,12 +1,17 @@
 package pl.fastus.waluta.model.DTO;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ExchangeRequest {
 
     public static final String THREE_LETTERS_MAX = "Currency code should have 3 letter! For example PLN";

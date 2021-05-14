@@ -18,66 +18,50 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class NbpApiWebServiceTest {
-//
-//    public static MockWebServer mockWebServer;
-//
-//    NbpApiWebService service;
-//
-//    ObjectMapper objectMapper;
-//
-//    @BeforeAll
-//    static void setMockWebServer() throws IOException {
-//        mockWebServer = new MockWebServer();
-//        mockWebServer.start();
-//    }
-//
-//    @BeforeEach
-//    void setUp() {
-//        String baseUrl = String.format( "http://localhost:%s", mockWebServer.getPort() );
-//        service = new NbpApiWebService(baseUrl, baseUrl);
-//        objectMapper = new ObjectMapper();
-//    }
-//
-//    @AfterAll
-//    static void tearDown() throws IOException {
-//        mockWebServer.shutdown();
-//    }
-//
-//    @Test
-//    void getTodayTableACourses() throws JsonProcessingException {
-//        TableRequest tableRequest = new TableRequest();
-//        tableRequest.setTable("A");
-//        tableRequest.setNo("090/A/NBP/2021");
-//        tableRequest.setEffectiveDate("date");
-//        tableRequest.setRates(Set.of(
-//                    new RateRequest("bat (Tajlandia)", "THB", 0.1201),
-//                    new RateRequest("dolar amerykański", "USD", 3.7456)
-//                ));
-//
-//        mockWebServer.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(tableRequest))
-//        .addHeader("Content-Type", "application/json"));
-//
-//        TableRequest response = service.getTodayTableACourses().blockFirst();
-//
-//        assertNotNull(response);
-//        assertEquals( 2, response.getRates().size() );
-//        assertEquals( "A", response.getTable());
-//        assertEquals( "090/A/NBP/2021", response.getNo());
-//    }
 
-//    @Test
-//    void getTodayExchangeRateFor() throws JsonProcessingException {
-//        Exchange exchange = new Exchange("A", "dolar amerykański","USD",
-//                List.of(new ExchangeRate("090/A/NBP/2021","2021-05-12",3.7456)));
-//
-//        mockWebServer.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(exchange)));
-//
-//        final Exchange returnedExchange = service.getTodayExchangeRateFor("USD").block();
-//        final ExchangeRate exchangeRate = returnedExchange.getRates().get(0);
-//        assertNotNull(exchangeRate);
-//        assertEquals( 1, returnedExchange.getRates().size() );
-//        assertEquals( 3.7456, exchangeRate.getMid());
-//        assertEquals( "090/A/NBP/2021", exchangeRate.getNo());
-//
-//    }
+    public static MockWebServer mockWebServer;
+
+    NbpApiService service;
+
+    ObjectMapper objectMapper;
+
+    @BeforeAll
+    static void setMockWebServer() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+    }
+
+    @BeforeEach
+    void setUp() {
+        String baseUrl = String.format( "http://localhost:%s", mockWebServer.getPort() );
+        service = new NbpApiService(baseUrl);
+        objectMapper = new ObjectMapper();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        mockWebServer.shutdown();
+    }
+
+    @Test
+    void getTodayTableACourses() throws JsonProcessingException {
+        TableRequest tableRequest = new TableRequest();
+        tableRequest.setTable("A");
+        tableRequest.setNo("090/A/NBP/2021");
+        tableRequest.setEffectiveDate("date");
+        tableRequest.setRates(Set.of(
+                    new RateRequest("bat (Tajlandia)", "THB", 0.1201),
+                    new RateRequest("dolar amerykański", "USD", 3.7456)
+                ));
+
+        mockWebServer.enqueue(new MockResponse().setBody(objectMapper.writeValueAsString(tableRequest))
+        .addHeader("Content-Type", "application/json"));
+
+        TableRequest response = service.getTableA();
+
+        assertNotNull(response);
+        assertEquals( 2, response.getRates().size() );
+        assertEquals( "A", response.getTable());
+        assertEquals( "090/A/NBP/2021", response.getNo());
+    }
 }

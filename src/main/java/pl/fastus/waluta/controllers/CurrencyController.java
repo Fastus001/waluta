@@ -37,7 +37,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/rates")
-    public List<RateResponse> getCurrentRates(){
+    public List<RateResponse> getCurrentExchangeRates(){
         TableRequest ratesTable = nbpApiService.getTableA();
 
         return currenciesService.currentExchangeRates(ratesTable);
