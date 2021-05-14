@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.fastus.waluta.exceptions.NoSuchCurrencyException;
 import pl.fastus.waluta.mappers.ExchangeMapper;
+import pl.fastus.waluta.mappers.RateMapper;
 import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.TableRequestMapper;
 import pl.fastus.waluta.model.Currencies;
@@ -26,19 +27,29 @@ public class CurrenciesService {
 
     private final CurrenciesRepository currenciesRepository;
     private final ExchangeRepository exchangeRepository;
+
     private final TableRequestMapper tableRequestMapper;
     private final ExchangeMapper exchangeMapper;
     private final RateToAvailableRate toAvailableRateMapper;
+    private final RateMapper rateMapper;
 
-    public Currencies saveTable(TableRequest toSave){
+    public List<RateResponse> currentExchangeRates(TableRequest toSave){
         final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
-        return currenciesRepository.save(currencies);
+        Currencies savedCurrencies = currenciesRepository.save(currencies);
+
+        return savedCurrencies
+                .getRates()
+                .stream()
+                .map(rateMapper::mapToRateResponse)
+                .collect(Collectors.toList());
     }
 
     public List<AvailableRate> getAvailableRates(TableRequest toSave){
         final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
-        Currencies save = currenciesRepository.save(currencies);
-        return save.getRates()
+        Currencies savedCurrencies = currenciesRepository.save(currencies);
+
+        return savedCurrencies
+                .getRates()
                 .stream()
                 .map(toAvailableRateMapper::mapToAvailableRate)
                 .collect(Collectors.toList());
@@ -46,7 +57,7 @@ public class CurrenciesService {
 
 
 
-    public Exchange exchangeCurrencies(ExchangeRequest request, TableRequest tableRequest) {
+    public Exchange exchange(ExchangeRequest request, TableRequest tableRequest) {
         Set<RateRequest> rates = tableRequest.getRates();
         rates.add(new RateRequest("złotówki", "PLN", 1D));
 

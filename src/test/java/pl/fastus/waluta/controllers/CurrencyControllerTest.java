@@ -9,15 +9,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pl.fastus.waluta.mappers.RateMapper;
-import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.AvailableRate;
 import pl.fastus.waluta.model.DTO.TableRequest;
 import pl.fastus.waluta.model.Rate;
 import pl.fastus.waluta.services.CurrenciesService;
-import pl.fastus.waluta.services.NbpApiWebService;
-import reactor.core.publisher.Flux;
+import pl.fastus.waluta.services.NbpApiService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,7 +34,7 @@ class CurrencyControllerTest {
     public static final String DOLAR = "dolar amerykański";
     public static final String USD = "USD";
     @Mock
-    NbpApiWebService nbpApiWebService;
+    NbpApiService nbpApiService;
 
     @Mock
     CurrenciesService currenciesService;
@@ -66,7 +63,7 @@ class CurrencyControllerTest {
         AvailableRate rate1 = new AvailableRate(BAT, THB);
         AvailableRate rate2 = new AvailableRate(DOLAR, USD);
 
-        BDDMockito.given(nbpApiWebService.getTodayTableACourses()).willReturn(new TableRequest());
+        BDDMockito.given(nbpApiService.getTableA()).willReturn(new TableRequest());
         BDDMockito.given(currenciesService.getAvailableRates(any())).willReturn(List.of(rate1,rate2));
 
         mockMvc.perform(get("/api/currencies"))
