@@ -20,7 +20,7 @@ class RateMapperTest {
     void rateToRateResponse() {
         Rate rate= new Rate("bat (Tajlandia)", "THB", BigDecimal.valueOf(0.1201));
 
-        final RateResponse rateResponse = mapper.mapToRateResponse(rate);
+        final RateResponse rateResponse = mapper.toRateResponse(rate);
 
         assertNotNull(rateResponse);
         assertEquals(BAT_TAJLANDIA, rateResponse.getCurrency());

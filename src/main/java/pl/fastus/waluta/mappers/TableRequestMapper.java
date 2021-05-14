@@ -16,5 +16,5 @@ public interface TableRequestMapper {
             @Mapping(source = "table", target = "tableName"),
             @Mapping(source = "no", target = "number")
     })
-    Currencies tableRequestToCurrencies(TableRequest tableRequest);
+    Currencies toCurrencies(TableRequest tableRequest);
 }

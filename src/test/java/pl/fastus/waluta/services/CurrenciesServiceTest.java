@@ -7,9 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.fastus.waluta.mappers.ExchangeMapper;
+import pl.fastus.waluta.mappers.ExchangeRequestMapper;
 import pl.fastus.waluta.mappers.RateMapper;
-import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.TableRequestMapper;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.*;
@@ -43,9 +42,7 @@ class CurrenciesServiceTest {
     @Mock
     RateMapper rateMapper;
     @Mock
-    RateToAvailableRate toAvailableRateMapper;
-    @Mock
-    ExchangeMapper exchangeMapper;
+    ExchangeRequestMapper exchangeRequestMapper;
 
     @InjectMocks
     CurrenciesService service;
@@ -62,25 +59,25 @@ class CurrenciesServiceTest {
 
     @Test
     void testCurrentExchangeRates(){
-        given(tableRequestMapper.tableRequestToCurrencies(tableRequest)).willReturn(currencies);
+        given(tableRequestMapper.toCurrencies(tableRequest)).willReturn(currencies);
         given(currenciesRepository.save(any())).willReturn(currencies);
-        given(rateMapper.mapToRateResponse(any())).willReturn(new RateResponse("bat (Tajlandia)","THB", 0.1201));
+        given(rateMapper.toRateResponse(any())).willReturn(new RateResponse("bat (Tajlandia)","THB", 0.1201));
 
         List<RateResponse> rateResponses = service.currentExchangeRates(tableRequest);
 
         assertNotNull(rateResponses);
         assertEquals(2, rateResponses.size());
 
-        verify(tableRequestMapper, times(1)).tableRequestToCurrencies(any());
+        verify(tableRequestMapper, times(1)).toCurrencies(any());
         verify(currenciesRepository, times(1)).save(any());
-        verify(rateMapper, times(2)).mapToRateResponse(any());
+        verify(rateMapper, times(2)).toRateResponse(any());
     }
 
     @Test
     void getAvailableRates() {
-        given(tableRequestMapper.tableRequestToCurrencies(tableRequest)).willReturn(currencies);
+        given(tableRequestMapper.toCurrencies(tableRequest)).willReturn(currencies);
         given(currenciesRepository.save(any())).willReturn(currencies);
-        given(toAvailableRateMapper.mapToAvailableRate(any()))
+        given(rateMapper.toAvailableRate(any()))
                 .willReturn(new AvailableRate("bat (Tajlandia)","THB"));
 
         List<AvailableRate> availableRates = service.getAvailableRates(tableRequest);
@@ -88,9 +85,9 @@ class CurrenciesServiceTest {
         assertNotNull(availableRates);
         assertEquals(2, availableRates.size());
 
-        verify(tableRequestMapper, times(1)).tableRequestToCurrencies(any());
+        verify(tableRequestMapper, times(1)).toCurrencies(any());
         verify(currenciesRepository, times(1)).save(any());
-        verify(toAvailableRateMapper, times(2)).mapToAvailableRate(any());
+        verify(rateMapper, times(2)).toAvailableRate(any());
     }
 
     @Test
@@ -98,7 +95,7 @@ class CurrenciesServiceTest {
         ExchangeRequest request = new ExchangeRequest(100D,"THB","USD");
         Exchange exchange =  new Exchange(1L,100D,"THB","USD",3.2064, LocalDateTime.now());
 
-        given(exchangeMapper.toExchange(any(),any())).willReturn(exchange);
+        given(exchangeRequestMapper.toExchange(any(),any())).willReturn(exchange);
         given(exchangeRepository.save(any(Exchange.class))).willReturn(exchange);
 
         Exchange savedExchange = service.exchange(request, tableRequest);
@@ -106,7 +103,7 @@ class CurrenciesServiceTest {
         assertNotNull(savedExchange);
         assertEquals(3.2064, savedExchange.getAmountToReturn());
 
-        verify(exchangeMapper, times(1)).toExchange(any(), any());
+        verify(exchangeRequestMapper, times(1)).toExchange(any(), any());
         verify(exchangeRepository, times(1)).save(any());
     }
 

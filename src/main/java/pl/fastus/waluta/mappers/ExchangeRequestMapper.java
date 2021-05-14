@@ -7,7 +7,7 @@ import pl.fastus.waluta.model.DTO.ExchangeResponse;
 import pl.fastus.waluta.model.Exchange;
 
 @Mapper(componentModel = "spring")
-public interface ExchangeMapper {
+public interface ExchangeRequestMapper {
 
     @Mapping(source = "request.amount", target = "amount")
     @Mapping(source = "request.codeFrom", target = "fromCurrency")

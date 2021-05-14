@@ -1,6 +1,7 @@
 package pl.fastus.waluta.mappers;
 
 import org.mapstruct.Mapper;
+import pl.fastus.waluta.model.DTO.AvailableRate;
 import pl.fastus.waluta.model.DTO.RateRequest;
 import pl.fastus.waluta.model.DTO.RateResponse;
 import pl.fastus.waluta.model.Rate;
@@ -11,5 +12,7 @@ import pl.fastus.waluta.model.Rate;
 @Mapper(componentModel = "spring")
 public interface RateMapper {
 
-    RateResponse mapToRateResponse(Rate rate);
+    RateResponse toRateResponse(Rate rate);
+
+    AvailableRate toAvailableRate(Rate rate);
 }

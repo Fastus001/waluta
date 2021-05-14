@@ -25,7 +25,7 @@ class TableRequestMapperTest {
                 new RateRequest("dolar amerykański", "USD", 3.7456)
         ));
 
-        final Currencies mappedCurrencies = mapper.tableRequestToCurrencies(tableRequest);
+        final Currencies mappedCurrencies = mapper.toCurrencies(tableRequest);
         assertNotNull(mappedCurrencies);
         assertEquals("A", mappedCurrencies.getTableName());
         assertEquals(2, mappedCurrencies.getRates().size());

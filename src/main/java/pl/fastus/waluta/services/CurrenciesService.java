@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.fastus.waluta.exceptions.NoSuchCurrencyException;
-import pl.fastus.waluta.mappers.ExchangeMapper;
+import pl.fastus.waluta.mappers.ExchangeRequestMapper;
 import pl.fastus.waluta.mappers.RateMapper;
-import pl.fastus.waluta.mappers.RateToAvailableRate;
 import pl.fastus.waluta.mappers.TableRequestMapper;
 import pl.fastus.waluta.model.Currencies;
 import pl.fastus.waluta.model.DTO.*;
@@ -29,33 +28,30 @@ public class CurrenciesService {
     private final ExchangeRepository exchangeRepository;
 
     private final TableRequestMapper tableRequestMapper;
-    private final ExchangeMapper exchangeMapper;
-    private final RateToAvailableRate toAvailableRateMapper;
+    private final ExchangeRequestMapper exchangeRequestMapper;
     private final RateMapper rateMapper;
 
     public List<RateResponse> currentExchangeRates(TableRequest toSave){
-        final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
+        final Currencies currencies = tableRequestMapper.toCurrencies(toSave);
         Currencies savedCurrencies = currenciesRepository.save(currencies);
 
         return savedCurrencies
                 .getRates()
                 .stream()
-                .map(rateMapper::mapToRateResponse)
+                .map(rateMapper::toRateResponse)
                 .collect(Collectors.toList());
     }
 
     public List<AvailableRate> getAvailableRates(TableRequest toSave){
-        final Currencies currencies = tableRequestMapper.tableRequestToCurrencies(toSave);
+        final Currencies currencies = tableRequestMapper.toCurrencies(toSave);
         Currencies savedCurrencies = currenciesRepository.save(currencies);
 
         return savedCurrencies
                 .getRates()
                 .stream()
-                .map(toAvailableRateMapper::mapToAvailableRate)
+                .map(rateMapper::toAvailableRate)
                 .collect(Collectors.toList());
     }
-
-
 
     public Exchange exchange(ExchangeRequest request, TableRequest tableRequest) {
         Set<RateRequest> rates = tableRequest.getRates();
@@ -68,7 +64,7 @@ public class CurrenciesService {
         BigDecimal result = multiply.divide(rateTo, RoundingMode.HALF_UP);
 
         log.info(result.toPlainString());
-        Exchange exchange = exchangeMapper.toExchange(request, result.toPlainString());
+        Exchange exchange = exchangeRequestMapper.toExchange(request, result.toPlainString());
         return exchangeRepository.save(exchange);
     }
 
