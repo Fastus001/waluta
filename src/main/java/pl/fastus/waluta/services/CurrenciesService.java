@@ -32,8 +32,7 @@ public class CurrenciesService {
     private final RateMapper rateMapper;
 
     public List<RateResponse> currentExchangeRates(TableRequest toSave){
-        final Currencies currencies = tableRequestMapper.toCurrencies(toSave);
-        Currencies savedCurrencies = currenciesRepository.save(currencies);
+        Currencies savedCurrencies = saveCurrencies(toSave);
 
         return savedCurrencies
                 .getRates()
@@ -43,14 +42,27 @@ public class CurrenciesService {
     }
 
     public List<AvailableRate> getAvailableRates(TableRequest toSave){
-        final Currencies currencies = tableRequestMapper.toCurrencies(toSave);
-        Currencies savedCurrencies = currenciesRepository.save(currencies);
+        Currencies savedCurrencies = saveCurrencies(toSave);
 
         return savedCurrencies
                 .getRates()
                 .stream()
                 .map(rateMapper::toAvailableRate)
                 .collect(Collectors.toList());
+    }
+
+    public List<RateResponse> getAvailableRatesChosen(TableRequest ratesTable, List<String> params) {
+        Currencies currencies = saveCurrencies(ratesTable);
+        return currencies.getRates()
+                .stream()
+                .filter(rate -> params.contains(rate.getCode()))
+                .map(rateMapper::toRateResponse)
+                .collect(Collectors.toList());
+    }
+
+    private Currencies saveCurrencies(TableRequest toSave) {
+        final Currencies currencies = tableRequestMapper.toCurrencies(toSave);
+        return currenciesRepository.save(currencies);
     }
 
     public Exchange exchange(ExchangeRequest request, TableRequest tableRequest) {

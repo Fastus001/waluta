@@ -91,6 +91,24 @@ class CurrenciesServiceTest {
     }
 
     @Test
+    void getAvailableRatesChosen() {
+        given(tableRequestMapper.toCurrencies(tableRequest)).willReturn(currencies);
+        given(currenciesRepository.save(any())).willReturn(currencies);
+        given(rateMapper.toRateResponse(any()))
+                .willReturn(new RateResponse("bat (Tajlandia)","THB", 0.1201));
+
+        List<RateResponse> ratesChosen = service.getAvailableRatesChosen(tableRequest, List.of("THB"));
+
+        assertNotNull(ratesChosen);
+        assertEquals(1, ratesChosen.size());
+
+        verify(tableRequestMapper, times(1)).toCurrencies(any());
+        verify(currenciesRepository, times(1)).save(any());
+        verify(rateMapper, times(1)).toRateResponse(any());
+
+    }
+
+    @Test
     void exchange() {
         ExchangeRequest request = new ExchangeRequest(100D,"THB","USD");
         Exchange exchange =  new Exchange(1L,100D,"THB","USD",3.2064, LocalDateTime.now());

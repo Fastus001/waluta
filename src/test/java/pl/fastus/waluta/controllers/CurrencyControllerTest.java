@@ -43,6 +43,7 @@ class CurrencyControllerTest {
     public static final String USD_CODE = "USD";
     public static final double THB_MID = 0.1201;
     public static final double USD_MID = 3.7456;
+    public static final double AMOUNT = 100D;
     @Mock
     NbpApiService nbpApiService;
 
@@ -110,9 +111,28 @@ class CurrencyControllerTest {
     }
 
     @Test
+    void getCurrentExchangeRatesWithParams() throws Exception {
+        List<RateResponse> rateResponses = List.of(
+                new RateResponse(THB_NAME, THB_CODE, THB_MID));
+
+        given(nbpApiService.getTableA()).willReturn(new TableRequest());
+        given(currenciesService.getAvailableRatesChosen(any(),any())).willReturn(rateResponses);
+
+        mockMvc.perform(get("/api/currencies/rates")
+                .param("codes", "THB"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].currency", is(THB_NAME)))
+                .andExpect(jsonPath("$[0].code", is(THB_CODE)))
+                .andExpect(jsonPath("$[0].mid", is(THB_MID)));
+
+        verify(nbpApiService, times(1)).getTableA();
+        verify(currenciesService, times(1)).getAvailableRatesChosen(any(),any());
+    }
+
+    @Test
     void exchange() throws Exception {
-        ExchangeRequest body = new ExchangeRequest(100D,THB_CODE,USD_CODE);
-        Exchange exchange =  new Exchange(1L,100D,THB_CODE,USD_CODE,3.2064, LocalDateTime.now());
+        ExchangeRequest body = new ExchangeRequest(AMOUNT,THB_CODE,USD_CODE);
+        Exchange exchange =  new Exchange(1L,AMOUNT,THB_CODE,USD_CODE,3.2064, LocalDateTime.now());
 
         given(nbpApiService.getTableA()).willReturn(new TableRequest());
         given(currenciesService.exchange(any(), any())).willReturn(exchange);
